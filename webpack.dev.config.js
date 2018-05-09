@@ -15,7 +15,18 @@ module.exports = {
 			test: /\.js$/,
 			use: ['babel-loader?cacheDirectory=true'],
 			include: path.join(__dirname, 'src')
-		}]
+		},{
+			test: /\.css$/,
+			use: ['style-loader', 'css-loader']
+	 },{
+    test: /\.(png|jpg|gif)$/,
+    use: [{
+        loader: 'url-loader',
+        options: {
+            limit: 8192
+        }
+    }]
+}]
 	},
 	devServer: {
 		contentBase: './dist',
@@ -28,6 +39,7 @@ module.exports = {
 	},
 	plugins: [
 	],
+	devtool: 'inline-source-map',
 	resolve: {
 		alias: {
 			pages: path.join(__dirname, 'src/pages'),
