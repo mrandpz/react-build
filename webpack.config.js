@@ -1,8 +1,10 @@
 const path = require('path');
 const webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin") 
 module.exports = {
-	mode: 'development',
+	mode: 'production',
 	entry:{
 		app: [
 				'react-hot-loader/patch',
@@ -12,45 +14,46 @@ module.exports = {
 },
 	output: {
 		path: path.join(__dirname, './dist'),
-		filename: '[name].[hash].js',
+		filename: '[name].[chunkhash].js',
 		chunkFilename: '[name].[chunkhash].js'
 	},
 	module: {
-		rules: [{
-			test: /\.js$/,
-			use: ['babel-loader?cacheDirectory=true'],
-			include: path.join(__dirname, 'src')
-		},{
-			test: /\.css$/,
-			use: ['style-loader', 'css-loader']
-	 },{
-    test: /\.(png|jpg|gif)$/,
-    use: [{
-        loader: 'url-loader',
-        options: {
-            limit: 8192
-        }
+    rules: [{
+        test: /\.js$/,
+        use: ['babel-loader?cacheDirectory=true'],
+        include: path.join(__dirname, 'src')
+      },{
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,  // replace ExtractTextPlugin.extract({..})
+          "css-loader"
+        ]
+      },{
+      test: /\.(png|jpg|gif)$/,
+      use: [{
+          loader: 'url-loader',
+          options: {
+              limit: 8192
+          }
+      }]
     }]
-}]
-	},
-	devServer: {
-		contentBase: './dist',
-		port: 9999,
-		historyApiFallback: true,
-		host: 'localhost',
-		hotOnly: true,
-		inline: true,
-		hot: true,
-		compress:true
 	},
 	plugins: [
-		new HtmlWebpackPlugin({
+    new HtmlWebpackPlugin({
 			filename: 'index.html',
 			template: path.join(__dirname, 'src/index.html')
-		}),
-		new webpack.HashedModuleIdsPlugin(),
-	
-	],
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+          'NODE_ENV': JSON.stringify('production')
+       }
+    }),
+    new CleanWebpackPlugin(['dist']),
+    new MiniCssExtractPlugin({
+  　　filename: "[name].[chunkhash:8].css",
+  　　 chunkFilename: "[id].css"
+　　 })
+  ],
 	optimization: {
 		splitChunks: {
 			chunks: "async",
@@ -73,7 +76,7 @@ module.exports = {
 		},
 	},
 	
-	devtool: 'inline-source-map',
+	devtool: 'cheap-module-source-map',
 	resolve: {
 		alias: {
 			pages: path.join(__dirname, 'src/pages'),
