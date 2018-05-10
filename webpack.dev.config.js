@@ -1,14 +1,19 @@
 const path = require('path');
 const webpack = require('webpack')
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
 	mode: 'development',
-	entry: [
-		'react-hot-loader/patch',
-		path.join(__dirname, 'src/index.js')
-	],
+	entry:{
+		app: [
+				'react-hot-loader/patch',
+				path.join(__dirname, 'src/index.js')
+		],
+		vendor: ['react', 'react-router-dom', 'redux', 'react-dom', 'react-redux']
+},
 	output: {
 		path: path.join(__dirname, './dist'),
-		filename: 'bundle.js',
+		filename: '[name].[hash].js',
+		chunkFilename: '[name].[chunkhash].js'
 	},
 	module: {
 		rules: [{
@@ -35,10 +40,35 @@ module.exports = {
 		host: 'localhost',
 		hotOnly: true,
 		inline: true,
-		hot: true
+		hot: true,
+		compress:true
 	},
-	plugins: [
-	],
+	plugins: [new HtmlWebpackPlugin({
+			filename: 'index.html',
+			template: path.join(__dirname, 'src/index.html')
+	})],
+	optimization: {
+		splitChunks: {
+			chunks: "async",
+			minSize: 30000,
+			minChunks: 1,
+			maxAsyncRequests: 5,
+			maxInitialRequests: 3,
+			name: true,
+			cacheGroups: {
+					default: {
+							minChunks: 2,
+							priority: -20,
+							reuseExistingChunk: true,
+					},
+					vendors: {
+							test: /[\\/]node_modules[\\/]/,
+							priority: -10
+					}
+			}
+		},
+	},
+	
 	devtool: 'inline-source-map',
 	resolve: {
 		alias: {

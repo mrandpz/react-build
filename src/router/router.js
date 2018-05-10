@@ -1,9 +1,18 @@
 import React from 'react';
 
 import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
+import Loadable from 'react-loadable';
+import Loading from '../component/Loading/Loading';
+import fakeDelay from '../component/Loading/fakeDelay';
 
-import Home from 'pages/Home/Home';
-import Page1 from 'pages/Page1/Page1';
+let LoadableHome = Loadable({
+    loader: () => fakeDelay(400).then(() => import('pages/Home/Home')),
+    loading: Loading
+});
+let LoadablePage1 = Loadable({
+    loader: () => fakeDelay(400).then(() => import('pages/Page1/Page1')),
+    loading: Loading
+});
 import Counter from 'pages/Counter/Counter';
 import UserInfo from 'pages/UserInfo/UserInfo';
 
@@ -17,8 +26,8 @@ const getRouter = () => (
                 <li><Link to="/userinfo">UserInfo</Link></li>
             </ul>
             <Switch>
-                <Route exact path="/" component={Home}/>
-                <Route path="/page1" component={Page1}/>
+                <Route exact path="/" component={LoadableHome}/>
+                <Route path="/page1" component={LoadablePage1}/>
                 <Route path="/counter" component={Counter}/>
                 <Route path="/userinfo" component={UserInfo}/>
             </Switch>
