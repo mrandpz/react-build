@@ -1,6 +1,7 @@
 webpack-dev-server 不生效的时候重新安装了webpack@3.5.5然后重新装回webpack v4莫名其妙就可以热替换了
 webpack4 默认开启压缩丑化代码production，可以设置环境为dev。即可关闭
 webpack4 的按需加载插件 react-loader
+
 ``
 {
   "presets": [
@@ -51,7 +52,9 @@ optimization: {
   ``
 
 webpack4得使用mini-css-extract-plugin这个插件来单独打包css。
+
 ``
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin") 
 new MiniCssExtractPlugin({
 　　filename: "[name].[chunkhash:8].css",
