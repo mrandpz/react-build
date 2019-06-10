@@ -2,7 +2,7 @@ webpack-dev-server 不生效的时候重新安装了webpack@3.5.5然后重新装
 webpack4 默认开启压缩丑化代码production，可以设置环境为dev。即可关闭
 webpack4 的按需加载插件 react-loader
 
-``
+```
 {
   "presets": [
     "react"
@@ -27,7 +27,7 @@ export default class LoadableDashboard extends React.Component {
 ``
 
 webpack4 代替 commonsChunkPlugin
-``
+```
 optimization: {
 		splitChunks: {
 			chunks: "async",
